@@ -1,0 +1,239 @@
+@charset "utf-8";
+@import url("https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css");
+@import url("https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap");
+
+* {
+    font: 400 1rem / 1 monospace;
+
+    &,
+    &::before,
+    &::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+html {
+    display: flex;
+    justify-content: center;
+    overflow: clip;
+    height: 100vh;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    row-gap: 16px;
+    width: 100%;
+    max-width: 600px;
+    padding-inline: 24px;
+    background: linear-gradient(rgba(from tomato r g b / .4)),
+        url("https://cdn.svgator.com/images/2022/06/animated-svg-background-example.svg") center / cover no-repeat fixed;
+}
+
+dialog,
+form[name=main] {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(from white r g b / .17);
+    border-radius: 8px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, .1);
+    padding: 16px;
+}
+
+dialog {
+    background-color: rgba(from currentcolor r g b / .7);
+    color: green;
+    position: relative;
+    width: 100%;
+
+    &:has(.error) {
+        color: red;
+    }
+
+    p {
+        border-radius: 4px;
+        color: white;
+        font-family: sans-serif;
+        font-size: x-small;
+        font-weight: 700;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    form {
+        float: right;
+        margin: -8px -8px 0 16px;
+    }
+
+    button {
+        aspect-ratio: 1 / 1;
+        background-color: tomato;
+        border: none;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        padding-inline: 6px;
+    }
+}
+
+form[name=main] {
+    background-color: rgba(from white r g b / .09);
+    display: grid;
+    gap: 54px 8px;
+    grid-template-columns: 1fr auto;
+    padding-block-start: 24px;
+
+    h1,
+    label:last-of-type,
+    p {
+        grid-column: 1 / -1;
+    }
+
+    h1 {
+        font-family: "Black Ops One", system-ui;
+        font-weight: normal;
+        font-size: xx-large;
+        letter-spacing: .15em;
+        text-align: center;
+        text-shadow: 1px 1px 2px rgb(from black r g b / 60%);
+        text-transform: uppercase;
+        user-select: none;
+    }
+
+    input,
+    button {
+        border: 2px solid black;
+        border-radius: 6px;
+        box-shadow: 0px 5px 0 black;
+        font-weight: 600;
+        line-height: 2;
+        padding: 4px 12px 0;
+        transition: all 150ms cubic-bezier(0.4, 0, .2, 1);
+
+        &:is(button) {
+            background-color: seagreen;
+            color: white;
+            cursor: pointer;
+
+            &:hover {
+                box-shadow: 0 0 black;
+                transform: translateY(6px);
+            }
+
+            &:not([type=submit]) {
+                aspect-ratio: 1 / 1;
+                background-color: lightcoral;
+                border-color: transparent;
+                box-shadow: 0px -3px 0 darkcyan;
+                line-height: 1;
+                padding: 0 4px;
+                position: absolute;
+                right: 6px;
+                top: 9px;
+
+                &:hover {
+                    box-shadow: 0 0 darkcyan;
+                    transform: translateY(-4px);
+                }
+
+                &.paste {
+                    top: 7px;
+                }
+            }
+
+            &:disabled, label:has(input:is(:focus:invalid, :user-invalid))+& {
+                background-color: cadetblue;
+                pointer-events: none;
+            }
+        }
+
+        &:is(input) {
+            background-color: aliceblue;
+            font-weight: 500;
+            outline: none;
+            width: 100%;
+
+            &::placeholder {
+                font-weight: 200;
+            }
+
+            &:focus {
+                border-color: rgba(from seagreen r g b / .8);
+                box-shadow: 0px 5px 0 seagreen;
+            }
+
+            &:focus:invalid,
+            &:user-invalid {
+                border-color: rgba(from red r g b / .8);
+                box-shadow: 0px 5px 0 red;
+            }
+        }
+    }
+
+    label {
+        position: relative;
+        width: 100%;
+
+        &::before {
+            color: white;
+            content: attr(aria-label);
+            font-family: "Black Ops One", system-ui;
+            font-weight: normal;
+            letter-spacing: .15em;
+            padding-block-end: 6px;
+            text-shadow: 1px 1px 2px rgb(from black r g b / .6);
+            transform: translateY(-100%);
+            position: absolute;
+        }
+    }
+
+    output {
+        display: block;
+        padding: 12px 12px 18px;
+        position: relative;
+        width: 100%;
+
+        &:empty {
+            color: rgb(from black r g b / .6);
+            font-size: .85rem;
+            font-family: system-ui;
+
+            &::before {
+                content: attr(aria-placeholder);
+            }
+
+            +button {
+                display: none;
+            }
+
+            &::after {
+                opacity: .65;
+            }
+        }
+
+        &:not(:empty) {
+            cursor: text;
+            font-weight: 500;
+            overflow-wrap: anywhere;
+
+            &::after {
+                opacity: .8;
+            }
+        }
+
+        &::after {
+            background-color: aliceblue;
+            border: 1px rgba(from black r g b / .4) dashed;
+            border-radius: 8px;
+            content: "";
+            inset: 0;
+            position: absolute;
+            z-index: -1;
+        }
+    }
+}
