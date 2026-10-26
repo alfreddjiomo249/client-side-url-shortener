@@ -14,7 +14,7 @@
         <h1>Client-Side<br>URL Shortener</h1>
         <!-- URL -->
         <label aria-label="URL">
-            <input type="url" placeholder="https://example.com/page" required autofocus spellcheck="false">
+            <input type="url" pattern="^https?:.*" placeholder="https://example.com/page" required autofocus spellcheck="false">
             <button type="button" aria-label="Paste URL" class="paste"><i class="ph-fill ph-clipboard"></i></button>
         </label>
         <button type="submit" disabled>✓</button>

@@ -1,90 +1,50 @@
-export class UrlController {
-    #model;
-    #view;
+import UrlModel from "./url-model.js";
+import UrlView from "./url-view.js";
 
-    constructor(model, view) {
-        this.#model = model;
-        this.#view = view;
-    }
+export default class UrlController {
+    #model = new UrlModel;
+    #view = new UrlView;
 
     init() {
-        if (this.#view.isIndex()) {
-            this.#view.bindShorten(this.shorten.bind(this));
-            this.#view.bindCopy(this.copy.bind(this));
-            this.#view.bindPaste(this.paste.bind(this));
-            this.#view.bindReset(this.reset.bind(this));
-            this.#view.bindUrlChanged(this.urlChanged.bind(this));
+        const view = this.#view;
+
+        if (!view.isHomePage()) return this.#resolveShortUrl();
+
+        view.bindShorten(this.#shortenUrl.bind(this));
+        const validate = this.#validateUrl.bind(this);
+        view.bindPaste(validate);
+        view.bindUrlChanged(validate);
+    }
+
+    #shortenUrl(url) {
+        this.#view.showShortUrl(this.#model.createShortUrl(
+            this.#validateUrl(url),
+            Object.assign(new URL(window.location.href), {
+                hash: "",
+                search: ""
+            }).href
+        ));
+    }
+
+    #validateUrl(candidateUrl) {
+        let url;
+
+        try {
+            url = new URL(candidateUrl);
+        } catch {
+            throw new Error(this.#view.ERR_INVALID_URL, {
+                cause: this.#view.ERR_INVALID_URL_CODE
+            });
         }
+
+        if (["http:", "https:"].includes(url.protocol)) return url.href;
         
-        this.#view.bindShowErrorStatus();
-        this.resolveShortUrl();
+        throw new Error(this.#view.ERR_INVALID_URL_PROTOCOL, {
+            cause: this.#view.ERR_INVALID_URL_PROTOCOL_CODE
+        });
     }
 
-    shorten(url) {
-        this.#view.clearMessage();
-        this.#view.clearShortUrl();
-
-        const baseUrl = new URL(window.location.href);
-
-        baseUrl.hash = "";
-        baseUrl.search = "";
-
-        const shortUrl = this.#model.createShortUrl(
-            url,
-            baseUrl.href
-        );
-
-        this.#view.showShortUrl(shortUrl);
-        this.#view.showMessage("URL shortened successfully.");
-    }
-
-    async copy(url) {
-        try {
-            await navigator.clipboard.writeText(url);
-            this.#view.showMessage("Short URL copied to clipboard.");
-        } catch {
-            this.#view.showMessage("Copy failed. Please copy the URL manually.", true);
-        }
-    }
-
-    async paste() {
-        try {
-            const candidateUrl = (await navigator.clipboard.readText()).trim();
-            this.#model.validateUrl(candidateUrl);
-            return candidateUrl;
-        } catch (error) {
-            this.#view.dispatchErrorEvent(error.message);
-        }
-    }
-
-    async reset() {
-        this.#view.clearShortUrl();
-        this.#view.focusInput();
-        this.#view.disableShortenButton();
-    }
-
-    urlChanged(url) {
-        try {
-            this.#model.validateUrl(url);
-            this.#view.enableShortenButton();
-            this.#view.closeDialog()
-        } catch {
-            this.#view.disableShortenButton();
-        }
-    }
-
-    resolveShortUrl() {
-        const id = window.location.pathname.substring(1);
-
-        if (!id) {
-            return;
-        }
-
-        const originalUrl = this.#model.findById(id);
-
-        if (originalUrl)
-            window.location.replace(originalUrl);
-        else
-            throw new Error("This short URL was not found in this browser's storage.");
+    #resolveShortUrl() {
+        this.#view.redirect(this.#model.findById(window.location.pathname.substring(1)));
     }
 }
