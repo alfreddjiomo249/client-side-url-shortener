@@ -7,27 +7,28 @@ const storage = new Proxy(localStorage, {
     }
 });
 
-const BiMap = new Proxy(Map, {
-    construct(target, [entries]) {
-        const map = Reflect.construct(...arguments);
-        const reverse = new target(entries.map(([key, value]) => [value, key]));
+class BiMap extends Map {
+    #reverse;
 
-        return Object.defineProperties(map, {
-            reverse: {
-                get() {
-                    return reverse;
-                }
-            },
-            set: {
-                value(key, value) {
-                    Map.prototype.set.call(map, key, value);
-                    reverse.set(value, key);
-                    return map;
-                }
-            }
+    constructor(entries = []) {
+        super();
+        this.#reverse = new Map;
+        entries.forEach(([key, value]) => {
+            this.set(key, value);
+            this.#reverse.set(value, key);
         });
     }
-});
+
+    get reverse() {
+        return this.#reverse;
+    }
+
+    set(key, value) {
+        super.set(key, value);
+        this.#reverse.set(value, key);
+        return this;
+    }
+}
 
 export default class UrlModel {
     #urls = new BiMap(JSON.parse(storage.getItem() ?? "[]"));
