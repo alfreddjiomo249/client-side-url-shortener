@@ -91,7 +91,7 @@ form[name=main] {
     h1,
     label:last-of-type,
     p {
-        grid-column: 1 / -1;
+        grid-column: span 2;
     }
 
     h1 {
@@ -147,7 +147,7 @@ form[name=main] {
             }
 
             &:disabled,
-            label:has(input:is(:focus:invalid, :user-invalid))+& {
+            span:has(input:is(:focus:invalid, :user-invalid))+& {
                 background-color: cadetblue;
                 pointer-events: none;
             }
@@ -209,7 +209,7 @@ form[name=main] {
                 content: attr(aria-placeholder);
             }
 
-            +button {
+            label:has(&)+button {
                 display: none;
             }
 

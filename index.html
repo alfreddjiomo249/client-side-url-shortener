@@ -7,22 +7,34 @@
     <title>Client-side URL Shortener</title>
     <link rel="stylesheet" href="style.css">
     <script type="module" src="js/app.js"></script>
+    <style>
+        span{
+            position: relative;
+            &:has(button.copy){
+                grid-column: span 2 ;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <form name="main">
         <h1>Client-Side<br>URL Shortener</h1>
         <!-- URL -->
-        <label aria-label="URL">
-            <input type="url" pattern="^https?:.*" placeholder="https://example.com/page" required autofocus spellcheck="false">
+        <span>
+            <label aria-label="URL">
+                <input type="url" pattern="^https?:.*" placeholder="https://example.com/page" required autofocus spellcheck="false">
+            </label>
             <button type="button" aria-label="Paste URL" class="paste"><i class="ph-fill ph-clipboard"></i></button>
-        </label>
+        </span>
         <button type="submit" disabled>✓</button>
         <!-- Short URL -->
-        <label aria-label="Short URL">
-            <output aria-live="polite" aria-placeholder="Your short URL will appear here."></output>
+        <span>
+            <label aria-label="Short URL">
+                <output aria-live="polite" aria-placeholder="Your short URL will appear here."></output>
+            </label>
             <button type="button" aria-label="Copy short URL" class="copy"><i class="ph-fill ph-copy"></i></button>
-        </label>
+        </span>
         <button type="reset">↻</button>
     </form>
     <dialog>
