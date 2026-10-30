@@ -89,8 +89,7 @@ form[name=main] {
     padding-block-start: 24px;
 
     h1,
-    label:last-of-type,
-    p {
+    span:last-of-type {
         grid-column: span 2;
     }
 
@@ -177,21 +176,21 @@ form[name=main] {
         }
     }
 
-    label {
+    span {
         position: relative;
         width: 100%;
+    }
 
-        &::before {
-            color: white;
-            content: attr(aria-label);
-            font-family: "Black Ops One", system-ui;
-            font-weight: normal;
-            letter-spacing: .15em;
-            padding-block-end: 6px;
-            text-shadow: 1px 1px 2px rgb(from black r g b / .6);
-            transform: translateY(-100%);
-            position: absolute;
-        }
+    label::before {
+        color: white;
+        content: attr(aria-label);
+        font-family: "Black Ops One", system-ui;
+        font-weight: normal;
+        letter-spacing: .15em;
+        padding-block-end: 6px;
+        text-shadow: 1px 1px 2px rgb(from black r g b / .6);
+        transform: translateY(-100%);
+        position: absolute;
     }
 
     output {
